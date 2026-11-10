@@ -20,7 +20,7 @@
 
 <section id="nl">
 <h1>🍐 Privacybeleid van Peertje</h1>
-<p class="muted">Laatst bijgewerkt: 9 november 2026</p>
+<p class="muted">Laatst bijgewerkt: 10 november 2026</p>
 
 <p>Peertje is een app voor gezinnen om eten te scannen, een eetdagboek bij te houden en water te tellen. Peertje is gemaakt door Koen Gullentops. Dit beleid legt uit welke gegevens de app gebruikt, waar ze naartoe gaan en wat je zelf kunt kiezen.</p>
 
@@ -30,7 +30,7 @@
 <p>Gezinsprofielen (namen, emoji, gezondheidsdoelen, allergieën, ingrediënten om te vermijden, adviezen van een diëtist), het eetdagboek, water, vaste maaltijden, scangeschiedenis, snelle drankjes en de boodschappenlijst worden bewaard op je toestel. Je Claude API-sleutel en Home Assistant-token staan in de sleutelhanger van je iPhone.</p>
 
 <h2>iCloud-gezinsdelen (optioneel)</h2>
-<p>Als je het gezin deelt met andere iPhones, worden profielen, diëtistenplannen, het dagboek, water en vaste maaltijden gesynchroniseerd via iCloud (Apple CloudKit). Dat gebeurt in je eigen iCloud-account en met de mensen die je zelf uitnodigt. De maker van Peertje heeft er geen toegang toe. Gewicht, geboortejaar en gegevens uit Apple Gezondheid worden niet via iCloud gedeeld.</p>
+<p>Als je het gezin deelt met andere iPhones, worden profielen, diëtistenplannen, het dagboek, water, vaste maaltijden en (zonder Home Assistant) de boodschappenlijst gesynchroniseerd via iCloud (Apple CloudKit). Dat gebeurt in je eigen iCloud-account en met de mensen die je zelf uitnodigt. De maker van Peertje heeft er geen toegang toe. Gewicht, geboortejaar en gegevens uit Apple Gezondheid worden niet via iCloud gedeeld.</p>
 
 <h2>Apple Gezondheid (optioneel)</h2>
 <p>Met je toestemming leest Peertje je gewicht en geboortedatum uit Apple Gezondheid om een waterdoel voor te stellen, en schrijft het het water dat je noteert naar Apple Gezondheid. Zet je "Wandelen met Peertje" aan, dan leest Peertje ook je stappen, om Peertje mee te laten wandelen en sterren uit te delen. Zet je "Mijn gewicht volgen" aan, dan leest Peertje je gewichtsverloop om het in een grafiek te tonen, en schrijft het het gewicht dat je noteert naar Apple Gezondheid. Je streefgewicht blijft op je iPhone. Deze gegevens blijven op je iPhone en in Apple Gezondheid. Ze gaan niet naar iCloud, niet naar Claude, niet naar andere gezinsleden en niet naar de maker van Peertje, en worden niet gebruikt voor reclame. Alleen je stappendoel wordt met het gezin gedeeld, je stappen niet.</p>
@@ -40,12 +40,16 @@
 <ul>
   <li>de foto of tekst die je laat analyseren;</li>
   <li>documenten of foto's van een diëtistenplan die je importeert;</li>
-  <li>voor een dagoverzicht: een voornaam, gezondheidsdoelen en wat er die dag gegeten is.</li>
+  <li>voor een dagoverzicht: een voornaam, gezondheidsdoelen en wat er die dag gegeten is;</li>
+  <li>voor een weekmenu: per persoon of het een volwassene of kind is, gezondheidsdoelen, allergieën, wat je wilt vermijden, de regels van je diëtist en wat vorige week vaak tekortkwam. Geen namen.</li>
 </ul>
 <p>Streepjescodes scannen gebruikt Claude nooit. Volgens de voorwaarden van Anthropic worden gegevens uit de API niet gebruikt om modellen te trainen. Zie het <a href="https://www.anthropic.com/legal/privacy">privacybeleid van Anthropic</a>. Je kunt de toestemming intrekken in Instellingen → Claude API-sleutel.</p>
 
 <h2>Open Food Facts</h2>
 <p>Voor verpakte producten zoekt Peertje de streepjescode op in <a href="https://world.openfoodfacts.org">Open Food Facts</a>, een vrije, open databank. Voor gezondere alternatieven zoekt Peertje er producten uit dezelfde categorie. Daarbij worden alleen de streepjescode en de productcategorie verstuurd, geen persoonsgegevens.</p>
+
+<h2>Foto's van gerechten (Wikimedia Commons)</h2>
+<p>Bij een weekmenu toont Peertje een foto van elk gerecht uit <a href="https://commons.wikimedia.org">Wikimedia Commons</a>, een verzameling vrij te gebruiken foto's, met de naam van de fotograaf en de licentie. Daarvoor worden alleen een paar zoekwoorden voor het gerecht verstuurd (bijvoorbeeld "waterzooi"), geen persoonsgegevens.</p>
 
 <h2>Home Assistant (optioneel)</h2>
 <p>Als je Home Assistant koppelt, gaan de items van je boodschappenlijst naar je eigen Home Assistant-server, op het adres dat je zelf invult.</p>
@@ -78,10 +82,11 @@
 <div class="card"><p><strong>In short:</strong> the developer receives no data from you. There are no accounts, ads, analytics or tracking. Data stays on your iPhone unless you turn on a feature that sends it somewhere: iCloud family sharing, Claude, Apple Health or Home Assistant.</p></div>
 <ul>
   <li><strong>On your iPhone:</strong> family profiles (names, health goals, allergies, dietitian advice), the food diary, water, presets, scan history and the shopping list. Your Claude API key and Home Assistant token are stored in the iOS Keychain.</li>
-  <li><strong>iCloud family sharing (optional):</strong> profiles, dietitian plans, diary, water and presets sync through your own iCloud (Apple CloudKit), with the people you invite. The developer has no access. Weight, year of birth and Apple Health data are not shared through iCloud.</li>
+  <li><strong>iCloud family sharing (optional):</strong> profiles, dietitian plans, diary, water, presets and (without Home Assistant) the shopping list sync through your own iCloud (Apple CloudKit), with the people you invite. The developer has no access. Weight, year of birth and Apple Health data are not shared through iCloud.</li>
   <li><strong>Apple Health (optional):</strong> reads weight and date of birth to suggest a water goal, writes the water you log, with "Walk with Peertje" reads your steps for the step game, and with "Follow my weight" reads your weight history for a chart and writes the weights you note. Your target weight stays on your iPhone. This data stays on your iPhone and in Apple Health, and is never sent to iCloud, Claude, other family members or the developer, or used for advertising. Only your step goal is shared with the family, never your steps.</li>
-  <li><strong>Claude by Anthropic (optional, with consent):</strong> with your own API key, Peertje sends photos or descriptions you choose to analyse, dietitian documents you import, and for day summaries a first name, health goals and the day's food. Barcode scanning never uses Claude. Under Anthropic's terms, API data isn't used for model training; see <a href="https://www.anthropic.com/legal/privacy">Anthropic's privacy policy</a>. You can withdraw consent in Settings.</li>
+  <li><strong>Claude by Anthropic (optional, with consent):</strong> with your own API key, Peertje sends photos or descriptions you choose to analyse, dietitian documents you import, for day summaries a first name, health goals and the day's food, and for a weekly menu, per person adult or child, health goals, allergies, avoided foods, the dietitian's rules and what was often short last week (no names). Barcode scanning never uses Claude. Under Anthropic's terms, API data isn't used for model training; see <a href="https://www.anthropic.com/legal/privacy">Anthropic's privacy policy</a>. You can withdraw consent in Settings.</li>
   <li><strong>Open Food Facts:</strong> barcodes and product categories are looked up in Open Food Facts; no personal data is sent.</li>
+  <li><strong>Wikimedia Commons:</strong> for the weekly menu, a photo of each dish is looked up on Wikimedia Commons (freely licensed photos, shown with the photographer's name and license). Only a few search words for the dish are sent, no personal data.</li>
   <li><strong>Home Assistant (optional):</strong> shopping list items go to your own Home Assistant server.</li>
   <li><strong>Location and your stores (optional):</strong> if you add supermarkets to "My stores", Peertje uses your location to find stores nearby (Apple Maps) and lets iOS notice when you walk into one, to show your shopping list. Your stores and visits stay on your iPhone; they're not synced through iCloud or sent to anyone.</li>
   <li><strong>Camera, microphone, speech:</strong> used to scan and photograph food and to say what you eat. Speech recognition is done by iOS and may use Apple's servers, depending on your iPhone's settings.</li>
