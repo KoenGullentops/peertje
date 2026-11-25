@@ -1,0 +1,494 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Wat Peertje kan: scannen, je dag, koken en boodschappen, doelen en je diëtist, spel en samen.">
+<title>Peertje in een oogopslag</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Figtree:wght@400;500;600&family=DM+Mono:wght@500&display=swap">
+<style>
+/* Layout: a hero where Peertje fills with water, then "shelves" of sticker cards, one shelf per part of the day. */
+:root {
+  --bg: #f4f7ec;          /* orchard morning */
+  --surface: #ffffff;
+  --ink: #1d2a21;
+  --muted: #5c6b60;
+  --pear: #fbf1cf;        /* Peertje's skin */
+  --pear-line: #b9a66a;
+  --leaf: #5fb83a;
+  --deep: #1f6b3a;        /* app green */
+  --water: #3a9be0;
+  --water-light: #8fd0ff;
+  --coral: #ef7b5b;
+  --sun: #f5c542;
+  --chip: #e7efdc;
+  --shadow: 0 1px 0 rgba(31,107,58,.08), 0 10px 24px -14px rgba(31,107,58,.35);
+  --display: "Fredoka", "Baloo 2", ui-rounded, "SF Pro Rounded", system-ui, sans-serif;
+  --body: "Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "DM Mono", ui-monospace, "SF Mono", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #111914; --surface: #1a241d; --ink: #eef3e8; --muted: #a3b2a6;
+    --pear: #f3e7bd; --pear-line: #c9b77c; --leaf: #74cf4b; --deep: #7fd39a;
+    --water: #4aa9ee; --water-light: #9fd8ff; --coral: #ff8f70; --sun: #ffd35c; --chip: #243228;
+    --shadow: 0 1px 0 rgba(0,0,0,.3), 0 12px 26px -14px rgba(0,0,0,.7);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #111914; --surface: #1a241d; --ink: #eef3e8; --muted: #a3b2a6;
+  --pear: #f3e7bd; --pear-line: #c9b77c; --leaf: #74cf4b; --deep: #7fd39a;
+  --water: #4aa9ee; --water-light: #9fd8ff; --coral: #ff8f70; --sun: #ffd35c; --chip: #243228;
+  --shadow: 0 1px 0 rgba(0,0,0,.3), 0 12px 26px -14px rgba(0,0,0,.7);
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font: 400 16px/1.55 var(--body);
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.wrap { max-width: 1080px; margin: 0 auto; padding-block: 28px 64px; display: grid; gap: 56px; }
+h1, h2, h3 { font-family: var(--display); text-wrap: balance; margin: 0; letter-spacing: -.01em; }
+p { margin: 0; }
+a { color: var(--deep); }
+:focus-visible { outline: 3px solid var(--water); outline-offset: 3px; border-radius: 8px; }
+
+/* ---------- Language switch ---------- */
+.topbar { display: flex; justify-content: flex-end; }
+.lang { display: inline-flex; gap: 4px; padding: 4px; border-radius: 999px; background: var(--surface); box-shadow: var(--shadow); }
+.lang button { font: 600 14px/1 var(--display); border: 0; background: transparent; color: var(--muted); padding: 9px 14px; border-radius: 999px; cursor: pointer; }
+.lang button[aria-pressed="true"] { background: var(--deep); color: var(--bg); }
+
+/* ---------- Hero ---------- */
+.hero {
+  display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr); gap: 32px; align-items: center;
+}
+.eyebrow { font: 500 12px/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--deep); }
+.hero h1 { font-size: clamp(3rem, 9vw, 5.6rem); font-weight: 700; line-height: .95; color: var(--deep); margin-top: 10px; }
+.hero h1 span { color: var(--ink); }
+.hero .lede { font-size: 1.2rem; max-width: 34ch; margin-top: 16px; color: var(--ink); }
+.hero .sub { color: var(--muted); max-width: 52ch; margin-top: 10px; }
+.facts { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 22px; }
+.fact { font: 500 13px/1 var(--mono); background: var(--chip); color: var(--deep); padding: 9px 12px; border-radius: 999px; }
+
+.stage {
+  background: var(--surface); border-radius: 32px; box-shadow: var(--shadow);
+  padding: 22px 22px 20px; display: grid; gap: 14px; justify-items: center; position: relative; overflow: hidden;
+}
+.stage::before {
+  content: ""; position: absolute; inset: auto -30% -55% -30%; height: 70%;
+  background: radial-gradient(closest-side, color-mix(in srgb, var(--leaf) 22%, transparent), transparent);
+  pointer-events: none;
+}
+#pear { width: min(230px, 62vw); height: auto; overflow: visible; position: relative; }
+.bob { animation: bob 3.2s ease-in-out infinite; transform-origin: 100px 230px; }
+@keyframes bob { 0%,100% { transform: translateY(0) rotate(-1.5deg); } 50% { transform: translateY(-6px) rotate(1.5deg); } }
+.wave { animation: wave 2.6s linear infinite; }
+.wave.two { animation-duration: 3.8s; opacity: .55; }
+@keyframes wave { from { transform: translateX(0); } to { transform: translateX(-120px); } }
+.sparkle { opacity: 0; transition: opacity .4s; }
+.full .sparkle { opacity: 1; animation: twinkle 1.4s ease-in-out infinite; }
+.sparkle:nth-of-type(2) { animation-delay: .5s; }
+@keyframes twinkle { 0%,100% { transform: scale(.7); } 50% { transform: scale(1.15); } }
+
+.meter { width: 100%; display: grid; gap: 8px; position: relative; }
+.meter-row { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+.litres { font: 700 1.6rem/1 var(--display); font-variant-numeric: tabular-nums; }
+.litres small { font: 500 13px var(--mono); color: var(--muted); }
+.mood { font-size: .95rem; color: var(--muted); min-height: 2.9em; text-align: center; }
+input[type=range] { width: 100%; accent-color: var(--water); height: 28px; }
+.glasses { display: flex; gap: 6px; justify-content: center; }
+.glass { width: 16px; height: 20px; border: 2px solid var(--water); border-top: none; border-radius: 0 0 5px 5px; position: relative; overflow: hidden; }
+.glass::after { content: ""; position: absolute; inset: auto 0 0 0; height: 0; background: var(--water); transition: height .25s; }
+.glass.on::after { height: 80%; }
+
+/* ---------- Score demo ---------- */
+.scores {
+  display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: 28px; align-items: center;
+  background: var(--surface); border-radius: 28px; padding: 26px; box-shadow: var(--shadow);
+}
+.scores h2 { font-size: clamp(1.6rem, 4vw, 2.2rem); }
+.scores p { color: var(--muted); margin-top: 8px; max-width: 46ch; }
+.meal { display: grid; gap: 12px; }
+.meal-name { font: 600 1.05rem var(--display); display: flex; gap: 8px; align-items: center; }
+.meal-name .tag { font: 500 11px/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; background: var(--chip); color: var(--deep); padding: 6px 8px; border-radius: 6px; }
+.person { display: grid; grid-template-columns: 52px minmax(0, 1fr); gap: 12px; align-items: center; padding: 10px; border-radius: 16px; background: var(--bg); }
+.ring { --v: 50; --c: var(--sun); width: 52px; height: 52px; border-radius: 50%; display: grid; place-items: center;
+  background: conic-gradient(var(--c) calc(var(--v) * 1%), color-mix(in srgb, var(--c) 22%, transparent) 0);
+  position: relative; }
+.ring::before { content: ""; position: absolute; inset: 6px; border-radius: 50%; background: var(--bg); }
+.ring b { position: relative; font: 700 1.05rem var(--display); font-variant-numeric: tabular-nums; }
+.person strong { font-weight: 600; }
+.person span { display: block; color: var(--muted); font-size: .9rem; }
+
+/* ---------- Shelves ---------- */
+.shelf { display: grid; gap: 18px; }
+.shelf-head { display: flex; align-items: center; gap: 14px; }
+.shelf-head .badge { width: 52px; height: 52px; border-radius: 16px; display: grid; place-items: center; background: var(--tint, var(--chip)); flex: none; }
+.shelf-head .badge svg { width: 28px; height: 28px; }
+.shelf-head h2 { font-size: clamp(1.5rem, 3.6vw, 2rem); }
+.shelf-head p { color: var(--muted); font-size: .95rem; }
+.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 230px), 1fr)); gap: 14px; }
+.card {
+  background: var(--surface); border-radius: 20px; padding: 16px 16px 18px; box-shadow: var(--shadow);
+  display: grid; gap: 8px; align-content: start; min-width: 0;
+  transform: rotate(var(--tilt, 0deg)); transition: transform .25s cubic-bezier(.3,1.6,.5,1);
+  border: 2px solid transparent;
+}
+.card:hover { transform: rotate(0deg) translateY(-3px) scale(1.02); border-color: color-mix(in srgb, var(--tint-solid, var(--leaf)) 45%, transparent); }
+.card .ico { width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; background: var(--tint, var(--chip)); }
+.card .ico svg { width: 22px; height: 22px; }
+.card h3 { font-size: 1.08rem; font-weight: 600; }
+.card p { color: var(--muted); font-size: .93rem; }
+.card .new { justify-self: start; font: 500 10.5px/1 var(--mono); letter-spacing: .1em; text-transform: uppercase; color: #fff; background: var(--coral); padding: 5px 7px; border-radius: 6px; }
+.cards .card:nth-child(4n+1) { --tilt: -1.2deg; }
+.cards .card:nth-child(4n+2) { --tilt: .8deg; }
+.cards .card:nth-child(4n+3) { --tilt: -.5deg; }
+.cards .card:nth-child(4n+4) { --tilt: 1.1deg; }
+
+.goals { display: flex; flex-wrap: wrap; gap: 8px; }
+.goal { font-size: .9rem; padding: 7px 12px; border-radius: 999px; background: var(--surface); box-shadow: var(--shadow); }
+.goal::before { content: "●"; color: var(--tint-solid, var(--leaf)); margin-right: 6px; font-size: .7em; vertical-align: 2px; }
+
+/* group tints */
+.t-scan  { --tint: color-mix(in srgb, var(--water) 18%, var(--surface)); --tint-solid: var(--water); }
+.t-day   { --tint: color-mix(in srgb, var(--leaf) 20%, var(--surface)); --tint-solid: var(--leaf); }
+.t-cook  { --tint: color-mix(in srgb, var(--coral) 18%, var(--surface)); --tint-solid: var(--coral); }
+.t-diet  { --tint: color-mix(in srgb, #9a6bd6 18%, var(--surface)); --tint-solid: #9a6bd6; }
+.t-play  { --tint: color-mix(in srgb, var(--sun) 28%, var(--surface)); --tint-solid: var(--sun); }
+.t-every { --tint: color-mix(in srgb, var(--deep) 16%, var(--surface)); --tint-solid: var(--deep); }
+.ico svg, .badge svg { stroke: var(--ink); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+/* ---------- Trust strip ---------- */
+.trust { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); gap: 14px; }
+.promise { border: 2px dashed color-mix(in srgb, var(--deep) 35%, transparent); border-radius: 20px; padding: 16px; display: grid; gap: 6px; }
+.promise h3 { font-size: 1.05rem; color: var(--deep); }
+.promise p { color: var(--muted); font-size: .93rem; }
+footer { text-align: center; color: var(--muted); font-size: .9rem; display: grid; gap: 6px; justify-items: center; }
+footer svg { width: 34px; height: 40px; }
+
+@media (max-width: 760px) {
+  .hero, .scores { grid-template-columns: minmax(0, 1fr); }
+  .stage { order: -1; }
+  .wrap { gap: 44px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .bob, .wave, .full .sparkle { animation: none; }
+  .card, .glass::after { transition: none; }
+}
+</style>
+</head>
+<body>
+<!-- Small line icons, reused across cards -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-barcode" viewBox="0 0 24 24"><path d="M3 7V4h3M21 7V4h-3M3 17v3h3M21 17v3h-3M7 8v8M10 8v8M13 8v8M16 8v8"/></symbol>
+    <symbol id="i-camera" viewBox="0 0 24 24"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></symbol>
+    <symbol id="i-mic" viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></symbol>
+    <symbol id="i-pencil" viewBox="0 0 24 24"><path d="M4 20l4-1 11-11-3-3L5 16z"/><path d="M14 6l3 3"/></symbol>
+    <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/></symbol>
+    <symbol id="i-swap" viewBox="0 0 24 24"><path d="M4 9h13l-3-3M20 15H7l3 3"/></symbol>
+    <symbol id="i-seal" viewBox="0 0 24 24"><path d="M12 3l2.5 2 3.2-.3.8 3.1 2.6 1.9-1.4 2.9.8 3.1-3 1.1-1.4 2.9L12 18.5 8.9 19.8 7.5 16.9l-3-1.1.8-3.1L3.9 9.8l2.6-1.9.8-3.1 3.2.3z"/><path d="M9 12l2 2 4-4"/></symbol>
+    <symbol id="i-book" viewBox="0 0 24 24"><path d="M5 4h11a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3z"/><path d="M9 8h6M9 12h6"/></symbol>
+    <symbol id="i-plate" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 3.5V20.5M12 12h8.5"/></symbol>
+    <symbol id="i-drop" viewBox="0 0 24 24"><path d="M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11z"/></symbol>
+    <symbol id="i-steps" viewBox="0 0 24 24"><path d="M8 4c2 0 2.5 3 2 6s-3 3-4 1-.5-7 2-7zM16 9c2 0 2.5 3 2 6s-3 3-4 1-.5-7 2-7zM6 15h4M14 20h4"/></symbol>
+    <symbol id="i-bike" viewBox="0 0 24 24"><circle cx="6" cy="16" r="3.5"/><circle cx="18" cy="16" r="3.5"/><path d="M6 16l4-7h5l3 7M10 9l2 7M13 6h3"/></symbol>
+    <symbol id="i-flame" viewBox="0 0 24 24"><path d="M12 21a6 6 0 0 0 6-6c0-4-3-6-4-10-2 2-3 4-3 6-1-1-2-2-2-3-2 2-3 4-3 7a6 6 0 0 0 6 6z"/></symbol>
+    <symbol id="i-glucose" viewBox="0 0 24 24"><path d="M3 17l5-6 4 3 4-7 5 5"/><circle cx="16" cy="7" r="1.2"/></symbol>
+    <symbol id="i-scale" viewBox="0 0 24 24"><path d="M6 9h12l2 11H4z"/><circle cx="12" cy="6" r="2.5"/></symbol>
+    <symbol id="i-pot" viewBox="0 0 24 24"><path d="M4 10h16v6a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4zM2 10h2M20 10h2M9 6c0-1 1-1 1-2M14 6c0-1 1-1 1-2"/></symbol>
+    <symbol id="i-palette" viewBox="0 0 24 24"><path d="M12 3a9 9 0 0 0 0 18c1.5 0 2-1 1.5-2s0-2 1.5-2h2a4 4 0 0 0 4-4c0-5.5-4-10-9-10z"/><circle cx="7.5" cy="11" r="1"/><circle cx="10" cy="7" r="1"/><circle cx="15" cy="7.5" r="1"/></symbol>
+    <symbol id="i-note" viewBox="0 0 24 24"><path d="M6 3h9l4 4v14H6z"/><path d="M15 3v4h4M9 12h7M9 16h5"/></symbol>
+    <symbol id="i-fridge" viewBox="0 0 24 24"><rect x="6" y="2.5" width="12" height="19" rx="2"/><path d="M6 10h12M9 6v1.5M9 13v3"/></symbol>
+    <symbol id="i-menu" viewBox="0 0 24 24"><path d="M6 3h12v18H6z"/><path d="M9 8h6M9 12h6M9 16h4"/></symbol>
+    <symbol id="i-cart" viewBox="0 0 24 24"><path d="M3 4h2l2.5 11h10L20 7H6.5"/><circle cx="9" cy="19" r="1.5"/><circle cx="17" cy="19" r="1.5"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24"><rect x="6" y="2.5" width="12" height="19" rx="3"/><path d="M9 7h6M9 11h6M9 15h4"/></symbol>
+    <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21s7-6 7-11a7 7 0 0 0-14 0c0 5 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></symbol>
+    <symbol id="i-stetho" viewBox="0 0 24 24"><path d="M6 3v6a4 4 0 0 0 8 0V3M10 13v3a4 4 0 0 0 8 0v-2"/><circle cx="18" cy="12" r="2"/></symbol>
+    <symbol id="i-report" viewBox="0 0 24 24"><path d="M5 3h14v18H5z"/><path d="M9 17v-3M12 17v-6M15 17v-4"/></symbol>
+    <symbol id="i-star" viewBox="0 0 24 24"><path d="M12 3l2.7 5.6 6.1.8-4.5 4.2 1.1 6.1L12 16.8l-5.4 2.9 1.1-6.1-4.5-4.2 6.1-.8z"/></symbol>
+    <symbol id="i-shirt" viewBox="0 0 24 24"><path d="M8 3l-5 3 2 4 2-1v12h10V9l2 1 2-4-5-3c0 2-2 3-4 3s-4-1-4-3z"/></symbol>
+    <symbol id="i-sticker" viewBox="0 0 24 24"><path d="M4 4h16v10l-6 6H4z"/><path d="M14 20v-6h6"/></symbol>
+    <symbol id="i-smile" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8.5 14a4 4 0 0 0 7 0M9 9.5v.5M15 9.5v.5"/></symbol>
+    <symbol id="i-family" viewBox="0 0 24 24"><circle cx="7" cy="7" r="2.5"/><circle cx="17" cy="7" r="2.5"/><circle cx="12" cy="12" r="2"/><path d="M3 20v-3a4 4 0 0 1 8 0M13 20v-3a4 4 0 0 1 8 0M9.5 20a2.5 2.5 0 0 1 5 0"/></symbol>
+    <symbol id="i-watch" viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="3.5"/><path d="M9 6l1-3h4l1 3M9 18l1 3h4l1-3M12 9v3l2 1.5"/></symbol>
+    <symbol id="i-widget" viewBox="0 0 24 24"><rect x="3" y="3" width="8" height="8" rx="2"/><rect x="13" y="3" width="8" height="8" rx="2"/><rect x="3" y="13" width="18" height="8" rx="2"/></symbol>
+    <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/></symbol>
+    <symbol id="i-siri" viewBox="0 0 24 24"><path d="M3 12h2l2-5 3 10 3-14 3 12 2-5h3"/></symbol>
+    <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 11l9-7 9 7M5 10v10h14V10"/><path d="M10 20v-5h4v5"/></symbol>
+    <symbol id="i-cal" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></symbol>
+  </defs>
+</svg>
+<div class="wrap">
+<div class="topbar"><div class="lang" role="group" aria-label="Taal · Langue · Language"><button type="button" data-lang="nl" aria-pressed="true">NL</button><button type="button" data-lang="fr" aria-pressed="false">FR</button><button type="button" data-lang="en" aria-pressed="false">EN</button></div></div>
+<header class="hero"><div>
+<div data-i="eyebrow" class="eyebrow">Gezinsapp voor gezond eten · iPhone, Apple Watch</div>
+<h1>Peertje <span data-i="h1b">helpt je gezin gezond eten.</span></h1>
+<p data-i="lede" class="lede">Scan wat je eet en zie meteen of het bij iedereen aan tafel past, zonder calorieën te tellen.</p>
+<p data-i="sub" class="sub">Peertje is een peertje dat met je meedrinkt, meewandelt, meefietst en juicht als de dag goed gaat. Alles hieronder zit vandaag al in de app.</p>
+<div class="facts"><span data-i="f1" class="fact">Score 0–100 per persoon</span><span data-i="f2" class="fact">NL · FR · EN</span><span data-i="f3" class="fact">Geen reclame · geen tracking</span><span data-i="f4" class="fact">Claude · ChatGPT · Gemini · Grok</span></div>
+</div>
+<div class="stage" data-ia="stageAria" aria-label="Probeer het: vul Peertje met water">
+      <svg id="pear" viewBox="0 0 200 250" role="img" aria-labelledby="pearTitle">
+        <title id="pearTitle" data-i="pearTitle">Peertje, dat zich vult met water</title>
+        <defs>
+          <clipPath id="body">
+            <circle cx="100" cy="160" r="72"/>
+            <circle cx="100" cy="92" r="44"/>
+            <path d="M58 104 L142 104 L170 160 L30 160 Z"/>
+          </clipPath>
+          <linearGradient id="waterGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="var(--water-light)"/>
+            <stop offset="1" stop-color="var(--water)"/>
+          </linearGradient>
+        </defs>
+        <g class="bob">
+          <!-- stem and leaf -->
+          <path d="M100 50 C98 38 100 30 106 22" stroke="#7a4a26" stroke-width="7" fill="none" stroke-linecap="round"/>
+          <path d="M106 30 C120 14 146 16 150 26 C140 40 118 42 106 30 Z" fill="var(--leaf)"/>
+          <path d="M110 30 C124 26 136 25 146 26" stroke="color-mix(in srgb, var(--leaf) 55%, #1d4d12)" stroke-width="2" fill="none" stroke-linecap="round"/>
+          <!-- outline: stroked shapes first, fills on top hide the inner lines -->
+          <g fill="var(--pear)" stroke="var(--pear-line)" stroke-width="5">
+            <circle cx="100" cy="160" r="72"/>
+            <circle cx="100" cy="92" r="44"/>
+          </g>
+          <g fill="var(--pear)">
+            <circle cx="100" cy="160" r="69.5"/>
+            <circle cx="100" cy="92" r="41.5"/>
+            <path d="M60 104 L140 104 L167 160 L33 160 Z"/>
+          </g>
+          <!-- water -->
+          <g clip-path="url(#body)">
+            <g id="waterLevel" style="transition: transform .6s cubic-bezier(.3,1.3,.5,1); transform: translateY(150px)">
+              <path class="wave two" d="M-40 90 q15 -8 30 0 t30 0 t30 0 t30 0 t30 0 t30 0 t30 0 t30 0 t30 0 t30 0 V260 H-40 Z" fill="var(--water-light)"/>
+              <path class="wave" d="M-40 94 q15 -9 30 0 t30 0 t30 0 t30 0 t30 0 t30 0 t30 0 t30 0 t30 0 t30 0 V260 H-40 Z" fill="url(#waterGrad)"/>
+            </g>
+            <ellipse cx="70" cy="120" rx="10" ry="26" fill="#fff" opacity=".45"/>
+          </g>
+          <!-- face -->
+          <g id="face" stroke="#3b2a1e" stroke-width="5" stroke-linecap="round" fill="none">
+            <path id="eyeL" d="M78 140 h10"/>
+            <path id="eyeR" d="M112 140 h10"/>
+            <path id="mouth" d="M90 162 q10 -6 20 0"/>
+          </g>
+          <circle cx="72" cy="156" r="7" fill="var(--coral)" opacity=".35"/>
+          <circle cx="128" cy="156" r="7" fill="var(--coral)" opacity=".35"/>
+          <path id="sweat" d="M140 118 c4 6 5 10 0 12 c-5 -2 -4 -6 0 -12 z" fill="var(--water)"/>
+          <g fill="var(--sun)">
+            <path class="sparkle" d="M30 70 l4 10 10 4 -10 4 -4 10 -4 -10 -10 -4 10 -4 z" style="transform-origin:30px 84px"/>
+            <path class="sparkle" d="M172 100 l3 8 8 3 -8 3 -3 8 -3 -8 -8 -3 8 -3 z" style="transform-origin:172px 111px"/>
+          </g>
+        </g>
+      </svg>
+      <div class="meter">
+        <div class="meter-row">
+          <div class="litres"><span id="litres">0,5 L</span> <small>/ 2,0 L</small></div>
+          <div class="glasses" id="glassRow" aria-hidden="true"></div>
+        </div>
+        <label for="glassInput" class="eyebrow" style="color:var(--muted)" data-i="glassLabel">Glazen water vandaag</label>
+        <input id="glassInput" type="range" min="0" max="8" step="1" value="2" aria-describedby="mood">
+        <p class="mood" id="mood" aria-live="polite">Goed begonnen! Peertje loopt vol.</p>
+      </div>
+    </div>
+  
+</header>
+<section class="scores" aria-labelledby="scoresTitle"><div>
+<div data-i="sc.eyebrow" class="eyebrow">Eén maaltijd, een score voor iedereen</div>
+<h2 data-i="sc.title" id="scoresTitle">Dezelfde quiche kan voor de een prima zijn en voor de ander een uitzondering.</h2>
+<p data-i="sc.text" data-html="1">Iedereen stelt eigen doelen, allergieën en het advies van de diëtist in. Tik op <b>Meer uitleg over deze score</b> en Peertje toont elke stap, van de neutrale 60 tot het eindgetal.</p>
+</div><div class="meal">
+<div class="meal-name"><span data-i="sc.meal">Broccoliquiche</span> <span data-i="sc.tag" class="tag">560 g · foto</span></div>
+<div class="person"><div class="ring" style="--v:61;--c:var(--leaf)"><b>61</b></div><div><strong>Mama</strong><span data-i="sc.mama">Goede keuze · veel broccoli</span></div></div>
+<div class="person"><div class="ring" style="--v:51;--c:var(--sun)"><b>51</b></div><div><strong>Papa</strong><span data-i="sc.papa">Af en toe oké · cholesteroldoel, rijk deeg</span></div></div>
+<div class="person"><div class="ring" style="--v:5;--c:var(--coral)"><b>5</b></div><div><strong>Lotte</strong><span data-i="sc.lotte">Bevat melk · een allergie wint altijd</span></div></div>
+</div></section>
+<section class="shelf t-scan" aria-labelledby="s1"><div class="shelf-head"><div class="badge"><svg><use href="#i-barcode"/></svg></div><div>
+<h2 data-i="s1.t" id="s1">Scannen en begrijpen</h2>
+<p data-i="s1.s">Van streepjescode, foto of zin naar een duidelijke score.</p>
+</div></div><div class="cards">
+<article class="card"><div class="ico"><svg><use href="#i-barcode"/></svg></div><h3 data-i="s1.c0.t">Scan een streepjescode</h3><p data-i="s1.c0.p">Verpakte voeding krijgt een score per gezinslid, met allergenen en te vermijden ingrediënten altijd gemarkeerd.</p></article>
+<article class="card"><div class="ico"><svg><use href="#i-camera"/></svg></div><h3 data-i="s1.c1.t">Foto of beschrijving</h3><p data-i="s1.c1.p">Fotografeer je bord of typ "twee sneden bruin brood met kaas". De AI-dienst die je koos, maakt een schatting.</p></article>
+<article class="card"><div class="ico"><svg><use href="#i-mic"/></svg></div><h3 data-i="s1.c2.t">Zeg wat je eet</h3><p data-i="s1.c2.p">Spreek in plaats van te typen. Peertje maakt er onderdelen met hoeveelheden van.</p></article>
+<article class="card"><div class="ico"><svg><use href="#i-pencil"/></svg></div><h3 data-i="s1.c3.t">Zelf verbeteren</h3><p data-i="s1.c3.p">Pas ingrediënten en hoeveelheden aan vóór de score, of achteraf in het dagboek. De score volgt.</p></article>
+<article class="card"><span data-i="new" class="new">Nieuw</span><div class="ico"><svg><use href="#i-info"/></svg></div><h3 data-i="s1.c4.t">Meer uitleg over deze score</h3><p data-i="s1.c4.p">Elke stap met zijn punten: wat elk doel toevoegde, wat één keer telde en welke grens de score tegenhield.</p></article>
+<article class="card"><div class="ico"><svg><use href="#i-swap"/></svg></div><h3 data-i="s1.c5.t">Gezondere alternatieven</h3><p data-i="s1.c5.p">Na een lage score: betere producten uit hetzelfde schap, te koop in België.</p></article>
+<article class="card"><div class="ico"><svg><use href="#i-seal"/></svg></div><h3 data-i="s1.c6.t">Gebaseerd op officieel advies</h3><p data-i="s1.c6.p">Verkeerslichtgrenzen per 100 g, EU-claims, de WHO en de Hoge Gezondheidsraad, met links.</p></article>
+</div>
+</section>
+<section class="shelf t-day" aria-labelledby="s2"><div class="shelf-head"><div class="badge"><svg><use href="#i-cal"/></svg></div><div>
+<h2 data-i="s2.t" id="s2">Jouw dag</h2>
+<p data-i="s2.s">Eten, water en bewegen, op één scherm Vandaag.</p>
+</div></div><div class="cards">
+<article class="card"><div class="ico"><svg><use href="#i-book"/></svg></div><h3 data-i="s2.c0.t">Eetdagboek per persoon</h3><p data-i="s2.c0.p">Van ontbijt tot tussendoortje, met dagtotalen voor energie, verzadigd vet, suiker, zout en vezels.</p></article>
+<article class="card"><div class="ico"><svg><use href="#i-plate"/></svg></div><h3 data-i="s2.c1.t">Je bord</h3><p data-i="s2.c1.p">De helft groenten, een kwart granen, een kwart eiwit: zie hoe je dag het Healthy Eating Plate vult.</p></article>
+<article class="card"><div class="ico"><svg><use href="#i-drop"/></svg></div><h3 data-i="s2.c2.t">Waterdoel</h3><p data-i="s2.c2.p">Peertje loopt vol als je drinkt. Koffie, thee en soep tellen mee, ook soep uit het dagboek.</p></article>
+<article class="card"><div class="ico"><svg><use href="#i-steps"/></svg></div><h3 data-i="s2.c3.t">Wandelen met Peertje</h3><p data-i="s2.c3.p">Je stappen uit Apple Gezondheid laten Peertje meewandelen, en leveren sterren, sneakers en een pet op.</p></article>
+<article class="card"><span data-i="new" class="new">Nieuw</span><div class="ico"><svg><use href="#i-bike"/></svg></div><h3 data-i="s2.c4.t">Fietsen met Peertje</h3><p data-i="s2.c4.p">Gebruik je Strava? Peertje rijdt mee op een koersfiets, helm op, met de afstand van vandaag. Naast je stappen.</p></article>
+<article class="card"><div class="ico"><svg><use href="#i-flame"/></svg></div><h3 data-i="s2.c5.t">Verbrande calorieën</h3><p data-i="s2.c5.p">Wat je verbrandde door te bewegen, naast wat je at. Je beweegdoel levert sterren op.</p></article>
+<article class="card"><div class="ico"><svg><use href="#i-glucose"/></svg></div><h3 data-i="s2.c6.t">Bloedsuiker na het eten</h3><p data-i="s2.c6.p">Met een glucosesensor in Apple Gezondheid zie je bij een maaltijd hoe je bloedsuiker daarna verliep.</p></article>
+<article class="card"><div class="ico"><svg><use href="#i-scale"/></svg></div><h3 data-i="s2.c7.t">Mijn gewicht volgen</h3><p data-i="s2.c7.p">Een grafiek en een streefgewicht op Vandaag, gelijk met Apple Gezondheid. Nooit gedeeld met het gezin.</p></article>
+</div>
+</section>
+<section class="shelf t-cook" aria-labelledby="s3"><div class="shelf-head"><div class="badge"><svg><use href="#i-pot"/></svg></div><div>
+<h2 data-i="s3.t" id="s3">Koken en boodschappen</h2>
+<p data-i="s3.s">Wat eten we, wat zit er in de koelkast en wat staat er nog op de lijst.</p>
+</div></div><div class="cards">
+<article class="card"><div class="ico"><svg><use href="#i-pot"/></svg></div><h3 data-i="s3.c0.t">Weekmenu</h3><p data-i="s3.c0.p">Avondmaaltijden en lunches voor de week, elke dag vers gekookt, met wat in België in het seizoen is en de boodschappen opgeteld.</p></article>
+<article class="card"><span data-i="new" class="new">Nieuw</span><div class="ico"><svg><use href="#i-palette"/></svg></div><h3 data-i="s3.c1.t">Een thema voor je week</h3><p data-i="s3.c1.p">Licht en fris, vegetarisch, mediterraan en koolhydraatarm, weinig afwas, zuinig, kinderfavorieten of wereldkeuken.</p></article>
+<article class="card"><span data-i="new" class="new">Nieuw</span><div class="ico"><svg><use href="#i-note"/></svg></div><h3 data-i="s3.c2.t">Je notities bij een gerecht</h3><p data-i="s3.c2.p">"Minder zout, dubbel zoveel spinazie." Peertje toont het als het gerecht terugkomt, en het volgende menu volgt het.</p></article>
+<article class="card"><div class="ico"><svg><use href="#i-fridge"/></svg></div><h3 data-i="s3.c3.t">Wat kan ik maken?</h3><p data-i="s3.c3.p">Fotografeer je koelkast of kast en krijg gerechten die bij iedereen passen. Wat ontbreekt, gaat op de lijst.</p></article>
+<article class="card"><div class="ico"><svg><use href="#i-menu"/></svg></div><h3 data-i="s3.c4.t">Op restaurant</h3><p data-i="s3.c4.p">Fotografeer de menukaart: Peertje zegt per persoon welk gerecht het best past, en wat je het personeel vraagt.</p></article>
+<article class="card"><div class="ico"><svg><use href="#i-cart"/></svg></div><h3 data-i="s3.c5.t">Boodschappenlijst</h3><p data-i="s3.c5.p">Voeg toe vanuit een scan of met je stem: "melk, brood en eieren". Gedeeld via iCloud of Home Assistant.</p></article>
+<article class="card"><div class="ico"><svg><use href="#i-lock"/></svg></div><h3 data-i="s3.c6.t">Lijst op het vergrendelscherm</h3><p data-i="s3.c6.p">In je winkel verschijnt de lijst op het vergrendelscherm en in het Dynamic Island. Je vinkt meteen af.</p></article>
+<article class="card"><div class="ico"><svg><use href="#i-pin"/></svg></div><h3 data-i="s3.c7.t">Mijn winkels</h3><p data-i="s3.c7.p">Kies je supermarkten. Stap je er een binnen, dan toont Peertje wat je nog moet kopen.</p></article>
+</div>
+</section>
+<section class="shelf t-diet" aria-labelledby="s4"><div class="shelf-head"><div class="badge"><svg><use href="#i-stetho"/></svg></div><div>
+<h2 data-i="s4.t" id="s4">Doelen en je diëtist</h2>
+<p data-i="s4.s">Elke score wordt gewogen voor wie het eet.</p>
+</div></div><div class="cards">
+<article class="card"><div class="ico"><svg><use href="#i-stetho"/></svg></div><h3 data-i="s4.c0.t">Het plan van de diëtist</h3><p data-i="s4.c0.p">Importeer het als foto, pdf of tekst. De doelen en regels tellen mee in elke score, en elke maaltijd toont of ze het plan volgt.</p></article>
+<article class="card"><div class="ico"><svg><use href="#i-report"/></svg></div><h3 data-i="s4.c1.t">Weekrapport</h3><p data-i="s4.c1.p">Gemiddelden tegenover de dagdoelen, als pdf om met de diëtist te delen.</p></article>
+</div>
+<div class="goals" data-ia="goalsAria" aria-label="Doelen die je kunt aanzetten">
+<span data-i="g0" class="goal">Cholesterolvriendelijk</span>
+<span data-i="g1" class="goal">Weinig zout / bloeddruk</span>
+<span data-i="g2" class="goal">Bloedsuiker onder controle</span>
+<span data-i="g3" class="goal">Gewicht beheersen</span>
+<span data-i="g4" class="goal">Eiwitrijk</span>
+<span data-i="g5" class="goal">Minder suiker</span>
+<span data-i="g6" class="goal">Minder koolhydraten</span>
+<span data-i="g7" class="goal">Darmgezondheid (vezels)</span>
+<span data-i="g8" class="goal">Minder ultrabewerkt</span>
+<span data-i="g9" class="goal">Vegetarisch</span>
+<span data-i="g10" class="goal">Veganistisch</span>
+</div>
+</section>
+<section class="shelf t-play" aria-labelledby="s5"><div class="shelf-head"><div class="badge"><svg><use href="#i-star"/></svg></div><div>
+<h2 data-i="s5.t" id="s5">Peertje en spel</h2>
+<p data-i="s5.s">Gezonde gewoontes, een spelletje voor het hele gezin.</p>
+</div></div><div class="cards">
+<article class="card"><div class="ico"><svg><use href="#i-palette"/></svg></div><h3 data-i="s5.c0.t">Je eigen Peertje</h3><p data-i="s5.c0.p">Kleur, ogen, blaadje of krul, wangetjes en sproeten. Het vervangt je emoji overal.</p></article>
+<article class="card"><div class="ico"><svg><use href="#i-star"/></svg></div><h3 data-i="s5.c1.t">Sterren en levels</h3><p data-i="s5.c1.p">Van een klein pitje tot een gekroonde peer. Sterren gaan nooit omlaag.</p></article>
+<article class="card"><div class="ico"><svg><use href="#i-shirt"/></svg></div><h3 data-i="s5.c2.t">Kleerkast van Peertje</h3><p data-i="s5.c2.p">Elk level geeft iets om te dragen: een zonnebril, een feesthoedje, een gouden schil.</p></article>
+<article class="card"><div class="ico"><svg><use href="#i-sticker"/></svg></div><h3 data-i="s5.c3.t">Stickers en uitdagingen</h3><p data-i="s5.c3.p">Verzamel stickers, houd reeksen vol en ga elke week een nieuwe gezinsuitdaging aan.</p></article>
+<article class="card"><div class="ico"><svg><use href="#i-smile"/></svg></div><h3 data-i="s5.c4.t">Kindweergave</h3><p data-i="s5.c4.p">Stickers en vrolijke berichten in plaats van getallen. Allergieën blijven zichtbaar.</p></article>
+</div>
+</section>
+<section class="shelf t-every" aria-labelledby="s6"><div class="shelf-head"><div class="badge"><svg><use href="#i-family"/></svg></div><div>
+<h2 data-i="s6.t" id="s6">Samen, overal</h2>
+<p data-i="s6.s">Eén gezin, veel iPhones, een horloge en een beginscherm.</p>
+</div></div><div class="cards">
+<article class="card"><div class="ico"><svg><use href="#i-family"/></svg></div><h3 data-i="s6.c0.t">Deel het gezin</h3><p data-i="s6.c0.p">Profielen, dagboek en drankjes via je eigen iCloud. Iedereen noteert op de eigen iPhone.</p></article>
+<article class="card"><div class="ico"><svg><use href="#i-watch"/></svg></div><h3 data-i="s6.c1.t">Apple Watch</h3><p data-i="s6.c1.p">Noteer een glas vanaf je pols en zie Peertje vollopen.</p></article>
+<article class="card"><div class="ico"><svg><use href="#i-widget"/></svg></div><h3 data-i="s6.c2.t">Widgets</h3><p data-i="s6.c2.p">Water en Peertje op je beginscherm en vergrendelscherm, met een knop om meteen een glas toe te voegen.</p></article>
+<article class="card"><div class="ico"><svg><use href="#i-siri"/></svg></div><h3 data-i="s6.c3.t">Siri-opdrachten</h3><p data-i="s6.c3.p">Noteer water of bekijk je dag zonder de app te openen.</p></article>
+<article class="card"><div class="ico"><svg><use href="#i-home"/></svg></div><h3 data-i="s6.c4.t">Home Assistant</h3><p data-i="s6.c4.p">De boodschappenlijst op je eigen thuisserver, dezelfde voor het hele huishouden.</p></article>
+<article class="card"><div class="ico"><svg><use href="#i-globe"/></svg></div><h3 data-i="s6.c5.t">Drie talen</h3><p data-i="s6.c5.p">Nederlands, français en English, ieder in de eigen taal.</p></article>
+</div>
+</section>
+<section aria-labelledby="s7" class="shelf"><div class="shelf-head"><div><h2 data-i="pr.title" id="s7">Wat Peertje belooft</h2></div></div><div class="trust">
+<div class="promise"><h3 data-i="p0.t">Geen reclame, geen tracking</h3><p data-i="p0.p">Geen accounts en geen analytics. De maker ontvangt niets van jou.</p></div>
+<div class="promise"><h3 data-i="p1.t">Je eigen AI-sleutel</h3><p data-i="p1.p">Er gaat niets naar Claude, ChatGPT, Gemini of Grok voordat je het toestaat. Mensen gaan als nummer, nooit met hun naam.</p></div>
+<div class="promise"><h3 data-i="p2.t">Gezondheidsgegevens blijven thuis</h3><p data-i="p2.p">Stappen, ritten, gewicht, calorieën en bloedsuiker blijven op je iPhone en in Apple Gezondheid.</p></div>
+<div class="promise"><h3 data-i="p3.t">Scores die je kunt nakijken</h3><p data-i="p3.p">Elk punt wordt uitgelegd, en de regels komen uit openbaar advies dat je zelf kunt lezen.</p></div>
+</div></section>
+<footer>
+    <svg viewBox="0 0 200 250" aria-hidden="true">
+      <path d="M100 50 C98 38 100 30 106 22" stroke="#7a4a26" stroke-width="9" fill="none" stroke-linecap="round"/>
+      <path d="M106 30 C120 14 146 16 150 26 C140 40 118 42 106 30 Z" fill="var(--leaf)"/>
+      <circle cx="100" cy="160" r="72" fill="var(--pear)" stroke="var(--pear-line)" stroke-width="6"/>
+      <circle cx="100" cy="92" r="44" fill="var(--pear)"/>
+      <path d="M80 150 q6 -8 12 0 M108 150 q6 -8 12 0 M86 172 q14 14 28 0" stroke="#3b2a1e" stroke-width="7" fill="none" stroke-linecap="round"/>
+    </svg>
+    <p data-i="footer">Peertje geeft algemene richtlijnen voor dagelijkse voedingskeuzes, geen medisch advies.</p>
+  </footer>
+</div>
+<script>
+(() => {
+  const T = {"eyebrow": {"nl": "Gezinsapp voor gezond eten · iPhone, Apple Watch", "fr": "Appli familiale pour bien manger · iPhone, Apple Watch", "en": "Family food app · iPhone, Apple Watch"}, "h1b": {"nl": "helpt je gezin gezond eten.", "fr": "aide votre famille à bien manger.", "en": "helps your family eat well."}, "lede": {"nl": "Scan wat je eet en zie meteen of het bij iedereen aan tafel past, zonder calorieën te tellen.", "fr": "Scannez ce que vous mangez et voyez tout de suite si cela convient à chacun à table, sans compter les calories.", "en": "Scan what you eat and see straight away whether it suits everyone at the table, without counting calories."}, "sub": {"nl": "Peertje is een peertje dat met je meedrinkt, meewandelt, meefietst en juicht als de dag goed gaat. Alles hieronder zit vandaag al in de app.", "fr": "Peertje est une petite poire qui boit avec vous, marche avec vous, pédale avec vous et se réjouit quand la journée se passe bien. Tout ce qui suit est déjà dans l'appli.", "en": "Peertje is a little pear who drinks with you, walks with you, cycles with you and cheers when the day goes well. Everything below is in the app today."}, "f1": {"nl": "Score 0–100 per persoon", "fr": "Score 0–100 par personne", "en": "Score 0–100 per person"}, "f2": {"nl": "NL · FR · EN", "fr": "NL · FR · EN", "en": "NL · FR · EN"}, "f3": {"nl": "Geen reclame · geen tracking", "fr": "Pas de pub · pas de pistage", "en": "No ads · no tracking"}, "f4": {"nl": "Claude · ChatGPT · Gemini · Grok", "fr": "Claude · ChatGPT · Gemini · Grok", "en": "Claude · ChatGPT · Gemini · Grok"}, "glassLabel": {"nl": "Glazen water vandaag", "fr": "Verres d'eau aujourd'hui", "en": "Glasses of water today"}, "stageAria": {"nl": "Probeer het: vul Peertje met water", "fr": "Essayez : remplissez Peertje d'eau", "en": "Try it: fill Peertje with water"}, "pearTitle": {"nl": "Peertje, dat zich vult met water", "fr": "Peertje, qui se remplit d'eau", "en": "Peertje, filling up with water"}, "m.thirsty": {"nl": "Peertje heeft dorst! Begin met een glas water.", "fr": "Peertje a soif ! Commencez par un verre d'eau.", "en": "Peertje is thirsty! Start with a glass of water."}, "m.start": {"nl": "Goed begonnen! Peertje loopt vol.", "fr": "Bon début ! Peertje se remplit.", "en": "Nice start! Peertje is filling up."}, "m.almost1": {"nl": "Bijna: nog 1 glas!", "fr": "Presque : encore 1 verre !", "en": "Almost there: 1 more glass to go!"}, "m.almostN": {"nl": "Bijna: nog {n} glazen!", "fr": "Presque : encore {n} verres !", "en": "Almost there: {n} more glasses to go!"}, "m.full": {"nl": "Waterdoel gehaald! Peertje straalt.", "fr": "Objectif d'eau atteint ! Peertje rayonne.", "en": "Water goal reached! Peertje is beaming."}, "sc.eyebrow": {"nl": "Eén maaltijd, een score voor iedereen", "fr": "Un repas, un score pour chacun", "en": "One meal, a score for everyone"}, "sc.title": {"nl": "Dezelfde quiche kan voor de een prima zijn en voor de ander een uitzondering.", "fr": "La même quiche peut être parfaite pour l'un et un écart pour l'autre.", "en": "The same quiche can be great for one and a treat for another."}, "sc.text": {"nl": "Iedereen stelt eigen doelen, allergieën en het advies van de diëtist in. Tik op <b>Meer uitleg over deze score</b> en Peertje toont elke stap, van de neutrale 60 tot het eindgetal.", "fr": "Chacun choisit ses objectifs, ses allergies et les conseils du diététicien. Touchez <b>Plus d'explications sur ce score</b> et Peertje montre chaque étape, du 60 neutre au score final.", "en": "Each person sets their own goals, allergies and dietitian's advice. Tap <b>More about this score</b> and Peertje shows every step, from the neutral 60 to the final number."}, "sc.meal": {"nl": "Broccoliquiche", "fr": "Quiche au brocoli", "en": "Broccoli quiche"}, "sc.tag": {"nl": "560 g · foto", "fr": "560 g · photo", "en": "560 g · photo"}, "sc.mama": {"nl": "Goede keuze · veel broccoli", "fr": "Bon choix · beaucoup de brocoli", "en": "Good choice · plenty of broccoli"}, "sc.papa": {"nl": "Af en toe oké · cholesteroldoel, rijk deeg", "fr": "De temps en temps · objectif cholestérol, pâte riche", "en": "Okay sometimes · cholesterol goal, rich pastry"}, "sc.lotte": {"nl": "Bevat melk · een allergie wint altijd", "fr": "Contient du lait · une allergie l'emporte toujours", "en": "Contains milk · allergy always wins"}, "new": {"nl": "Nieuw", "fr": "Nouveau", "en": "New"}, "goalsAria": {"nl": "Doelen die je kunt aanzetten", "fr": "Objectifs à activer", "en": "Goals you can switch on"}, "pr.title": {"nl": "Wat Peertje belooft", "fr": "Ce que Peertje promet", "en": "What Peertje promises"}, "footer": {"nl": "Peertje geeft algemene richtlijnen voor dagelijkse voedingskeuzes, geen medisch advies.", "fr": "Peertje donne des repères généraux pour les choix alimentaires du quotidien, pas un avis médical.", "en": "Peertje gives general guidance for everyday food choices, not medical advice."}, "s1.t": {"nl": "Scannen en begrijpen", "fr": "Scanner et comprendre", "en": "Scan and understand"}, "s1.s": {"nl": "Van streepjescode, foto of zin naar een duidelijke score.", "fr": "D'un code-barres, d'une photo ou d'une phrase à un score clair.", "en": "From a barcode, a photo or a sentence to a clear score."}, "s1.c0.t": {"nl": "Scan een streepjescode", "fr": "Scannez un code-barres", "en": "Scan a barcode"}, "s1.c0.p": {"nl": "Verpakte voeding krijgt een score per gezinslid, met allergenen en te vermijden ingrediënten altijd gemarkeerd.", "fr": "Les produits emballés reçoivent un score par membre de la famille, allergènes et ingrédients à éviter toujours signalés.", "en": "Packaged food gets a score per family member, with allergens and avoided ingredients always marked."}, "s1.c1.t": {"nl": "Foto of beschrijving", "fr": "Photo ou description", "en": "Photo or description"}, "s1.c1.p": {"nl": "Fotografeer je bord of typ \"twee sneden bruin brood met kaas\". De AI-dienst die je koos, maakt een schatting.", "fr": "Photographiez votre assiette ou tapez « deux tranches de pain gris avec du fromage ». Le service d'IA choisi fait l'estimation.", "en": "Snap your plate or type \"two slices of brown bread with cheese\". The AI service you chose estimates it."}, "s1.c2.t": {"nl": "Zeg wat je eet", "fr": "Dites ce que vous mangez", "en": "Say what you eat"}, "s1.c2.p": {"nl": "Spreek in plaats van te typen. Peertje maakt er onderdelen met hoeveelheden van.", "fr": "Parlez au lieu de taper. Peertje en fait des éléments avec leurs quantités.", "en": "Speak instead of typing. Peertje turns it into dish parts with amounts."}, "s1.c3.t": {"nl": "Zelf verbeteren", "fr": "Corriger vous-même", "en": "Correct it"}, "s1.c3.p": {"nl": "Pas ingrediënten en hoeveelheden aan vóór de score, of achteraf in het dagboek. De score volgt.", "fr": "Modifiez ingrédients et quantités avant le score, ou après dans le journal. Le score suit.", "en": "Change ingredients and amounts before the score, or afterwards in the diary. The score follows."}, "s1.c4.t": {"nl": "Meer uitleg over deze score", "fr": "Plus d'explications sur ce score", "en": "More about this score"}, "s1.c4.p": {"nl": "Elke stap met zijn punten: wat elk doel toevoegde, wat één keer telde en welke grens de score tegenhield.", "fr": "Chaque étape avec ses points : ce que chaque objectif a ajouté, ce qui n'a compté qu'une fois, quelle limite a retenu le score.", "en": "Every step with its points: what each goal added, what counted once, which limit held it down."}, "s1.c5.t": {"nl": "Gezondere alternatieven", "fr": "Alternatives plus saines", "en": "Healthier alternatives"}, "s1.c5.p": {"nl": "Na een lage score: betere producten uit hetzelfde schap, te koop in België.", "fr": "Après un score bas : de meilleurs produits du même rayon, vendus en Belgique.", "en": "After a low score, better products from the same shelf, sold in Belgium."}, "s1.c6.t": {"nl": "Gebaseerd op officieel advies", "fr": "Basé sur des recommandations officielles", "en": "Based on real advice"}, "s1.c6.p": {"nl": "Verkeerslichtgrenzen per 100 g, EU-claims, de WHO en de Hoge Gezondheidsraad, met links.", "fr": "Seuils feux tricolores pour 100 g, allégations UE, l'OMS et le Conseil Supérieur de la Santé, avec liens.", "en": "Traffic-light lines per 100 g, EU claims, WHO and the Superior Health Council, with links."}, "s2.t": {"nl": "Jouw dag", "fr": "Votre journée", "en": "Your day"}, "s2.s": {"nl": "Eten, water en bewegen, op één scherm Vandaag.", "fr": "Repas, eau et mouvement, sur un seul écran Aujourd'hui.", "en": "Food, water and moving, on one Today screen."}, "s2.c0.t": {"nl": "Eetdagboek per persoon", "fr": "Journal alimentaire par personne", "en": "Food diary per person"}, "s2.c0.p": {"nl": "Van ontbijt tot tussendoortje, met dagtotalen voor energie, verzadigd vet, suiker, zout en vezels.", "fr": "Du petit-déjeuner aux collations, avec les totaux du jour en énergie, graisses saturées, sucre, sel et fibres.", "en": "Breakfast to snacks, with day totals for energy, saturated fat, sugar, salt and fibre."}, "s2.c1.t": {"nl": "Je bord", "fr": "Votre assiette", "en": "Your plate"}, "s2.c1.p": {"nl": "De helft groenten, een kwart granen, een kwart eiwit: zie hoe je dag het Healthy Eating Plate vult.", "fr": "Moitié légumes, un quart féculents, un quart protéines : voyez comment votre journée remplit l'Healthy Eating Plate.", "en": "Half vegetables, a quarter grains, a quarter protein: see how your day fills the Healthy Eating Plate."}, "s2.c2.t": {"nl": "Waterdoel", "fr": "Objectif d'eau", "en": "Water goal"}, "s2.c2.p": {"nl": "Peertje loopt vol als je drinkt. Koffie, thee en soep tellen mee, ook soep uit het dagboek.", "fr": "Peertje se remplit quand vous buvez. Café, thé et soupe comptent aussi, même la soupe du journal.", "en": "Peertje fills up as you drink. Coffee, tea and soup count too, and so does soup from the diary."}, "s2.c3.t": {"nl": "Wandelen met Peertje", "fr": "Marcher avec Peertje", "en": "Walk with Peertje"}, "s2.c3.p": {"nl": "Je stappen uit Apple Gezondheid laten Peertje meewandelen, en leveren sterren, sneakers en een pet op.", "fr": "Vos pas d'Apple Santé font marcher Peertje et rapportent étoiles, baskets et casquette.", "en": "Your steps from Apple Health make Peertje walk along, and earn stars, sneakers and a cap."}, "s2.c4.t": {"nl": "Fietsen met Peertje", "fr": "Pédaler avec Peertje", "en": "Cycle with Peertje"}, "s2.c4.p": {"nl": "Gebruik je Strava? Peertje rijdt mee op een koersfiets, helm op, met de afstand van vandaag. Naast je stappen.", "fr": "Vous utilisez Strava ? Peertje roule sur un vélo de course, casque sur la tête, avec la distance du jour. À côté de vos pas.", "en": "Use Strava? Peertje rides a racing bike, helmet on, with today's distance. Side by side with your steps."}, "s2.c5.t": {"nl": "Verbrande calorieën", "fr": "Calories brûlées", "en": "Burned calories"}, "s2.c5.p": {"nl": "Wat je verbrandde door te bewegen, naast wat je at. Je beweegdoel levert sterren op.", "fr": "Ce que vous avez brûlé en bougeant, à côté de ce que vous avez mangé. Votre objectif de mouvement rapporte des étoiles.", "en": "What you burned by moving, next to what you ate. Your move goal earns stars."}, "s2.c6.t": {"nl": "Bloedsuiker na het eten", "fr": "Glycémie après les repas", "en": "Blood sugar after meals"}, "s2.c6.p": {"nl": "Met een glucosesensor in Apple Gezondheid zie je bij een maaltijd hoe je bloedsuiker daarna verliep.", "fr": "Avec un capteur de glucose dans Apple Santé, ouvrez un repas pour voir l'évolution de votre glycémie ensuite.", "en": "With a glucose sensor in Apple Health, open a meal to see how your blood sugar went afterwards."}, "s2.c7.t": {"nl": "Mijn gewicht volgen", "fr": "Suivre mon poids", "en": "Follow your weight"}, "s2.c7.p": {"nl": "Een grafiek en een streefgewicht op Vandaag, gelijk met Apple Gezondheid. Nooit gedeeld met het gezin.", "fr": "Un graphique et un objectif sur Aujourd'hui, synchronisés avec Apple Santé. Jamais partagés avec la famille.", "en": "A chart and a target on Today, in sync with Apple Health. Never shared with the family."}, "s3.t": {"nl": "Koken en boodschappen", "fr": "Cuisine et courses", "en": "Cook and shop"}, "s3.s": {"nl": "Wat eten we, wat zit er in de koelkast en wat staat er nog op de lijst.", "fr": "Qu'est-ce qu'on mange, qu'y a-t-il dans le frigo et que reste-t-il sur la liste.", "en": "What's for dinner, what's in the fridge, and what's still on the list."}, "s3.c0.t": {"nl": "Weekmenu", "fr": "Menu de la semaine", "en": "Weekly menu"}, "s3.c0.p": {"nl": "Avondmaaltijden en lunches voor de week, elke dag vers gekookt, met wat in België in het seizoen is en de boodschappen opgeteld.", "fr": "Dîners et lunchs pour la semaine, cuisinés frais chaque jour, avec les produits de saison en Belgique et les courses additionnées.", "en": "Dinners and lunches for the week, cooked fresh each day, with what's in season in Belgium and the shopping added up."}, "s3.c1.t": {"nl": "Een thema voor je week", "fr": "Un thème pour votre semaine", "en": "A theme for your week"}, "s3.c1.p": {"nl": "Licht en fris, vegetarisch, mediterraan en koolhydraatarm, weinig afwas, zuinig, kinderfavorieten of wereldkeuken.", "fr": "Léger et frais, végétarien, méditerranéen et pauvre en glucides, peu de vaisselle, économique, préférés des enfants ou cuisine du monde.", "en": "Light and fresh, vegetarian, Mediterranean and low-carb, little washing up, thrifty, children's favourites or world kitchen."}, "s3.c2.t": {"nl": "Je notities bij een gerecht", "fr": "Vos notes sur un plat", "en": "Your notes on a dish"}, "s3.c2.p": {"nl": "\"Minder zout, dubbel zoveel spinazie.\" Peertje toont het als het gerecht terugkomt, en het volgende menu volgt het.", "fr": "« Moins de sel, deux fois plus d'épinards. » Peertje l'affiche quand le plat revient, et le prochain menu en tient compte.", "en": "\"Less salt, double the spinach.\" Peertje shows it when the dish comes back, and the next menu follows it."}, "s3.c3.t": {"nl": "Wat kan ik maken?", "fr": "Que puis-je préparer ?", "en": "What can I make?"}, "s3.c3.p": {"nl": "Fotografeer je koelkast of kast en krijg gerechten die bij iedereen passen. Wat ontbreekt, gaat op de lijst.", "fr": "Photographiez votre frigo ou placard et recevez des plats qui conviennent à tous. Ce qui manque va sur la liste.", "en": "Photograph your fridge or cupboard and get dishes that suit everyone. What's missing goes on the list."}, "s3.c4.t": {"nl": "Op restaurant", "fr": "Au restaurant", "en": "At the restaurant"}, "s3.c4.p": {"nl": "Fotografeer de menukaart: Peertje zegt per persoon welk gerecht het best past, en wat je het personeel vraagt.", "fr": "Photographiez la carte : Peertje indique pour chacun le plat le plus adapté, et quoi demander au personnel.", "en": "Photograph the menu: Peertje says per person which dish fits best, and what to ask the staff."}, "s3.c5.t": {"nl": "Boodschappenlijst", "fr": "Liste de courses", "en": "Shopping list"}, "s3.c5.p": {"nl": "Voeg toe vanuit een scan of met je stem: \"melk, brood en eieren\". Gedeeld via iCloud of Home Assistant.", "fr": "Ajoutez depuis un scan ou à la voix : « lait, pain et œufs ». Partagée via iCloud ou Home Assistant.", "en": "Add from a scan or by voice: \"milk, bread and eggs\". Shared through iCloud or Home Assistant."}, "s3.c6.t": {"nl": "Lijst op het vergrendelscherm", "fr": "Liste sur l'écran verrouillé", "en": "List on the lock screen"}, "s3.c6.p": {"nl": "In je winkel verschijnt de lijst op het vergrendelscherm en in het Dynamic Island. Je vinkt meteen af.", "fr": "Dans votre magasin, la liste apparaît sur l'écran verrouillé et dans la Dynamic Island. Cochez directement.", "en": "In your store, the list appears on the lock screen and in the Dynamic Island. Tick things off right there."}, "s3.c7.t": {"nl": "Mijn winkels", "fr": "Mes magasins", "en": "My stores"}, "s3.c7.p": {"nl": "Kies je supermarkten. Stap je er een binnen, dan toont Peertje wat je nog moet kopen.", "fr": "Choisissez vos supermarchés. Entrez dans l'un d'eux et Peertje montre ce qu'il reste à acheter.", "en": "Pick your supermarkets. Walk into one and Peertje shows what's still to buy."}, "s4.t": {"nl": "Doelen en je diëtist", "fr": "Objectifs et votre diététicien", "en": "Goals and your dietitian"}, "s4.s": {"nl": "Elke score wordt gewogen voor wie het eet.", "fr": "Chaque score est pesé pour la personne qui mange.", "en": "Every score is weighed for the person eating it."}, "s4.c0.t": {"nl": "Het plan van de diëtist", "fr": "Le plan du diététicien", "en": "The dietitian's plan"}, "s4.c0.p": {"nl": "Importeer het als foto, pdf of tekst. De doelen en regels tellen mee in elke score, en elke maaltijd toont of ze het plan volgt.", "fr": "Importez-le en photo, PDF ou texte. Ses objectifs et règles comptent dans chaque score, et chaque repas indique s'il suit le plan.", "en": "Import it as a photo, PDF or text. Its targets and rules count in every score, and each meal shows whether it follows the plan."}, "s4.c1.t": {"nl": "Weekrapport", "fr": "Rapport de la semaine", "en": "Week report"}, "s4.c1.p": {"nl": "Gemiddelden tegenover de dagdoelen, als pdf om met de diëtist te delen.", "fr": "Moyennes face aux objectifs du jour, en PDF à partager avec le diététicien.", "en": "Averages against the daily targets, as a PDF to share with the dietitian."}, "g0": {"nl": "Cholesterolvriendelijk", "fr": "Bon pour le cholestérol", "en": "Cholesterol-friendly"}, "g1": {"nl": "Weinig zout / bloeddruk", "fr": "Peu de sel / tension artérielle", "en": "Low salt / blood pressure"}, "g2": {"nl": "Bloedsuiker onder controle", "fr": "Contrôle de la glycémie", "en": "Blood-sugar control"}, "g3": {"nl": "Gewicht beheersen", "fr": "Gestion du poids", "en": "Weight management"}, "g4": {"nl": "Eiwitrijk", "fr": "Riche en protéines", "en": "High protein"}, "g5": {"nl": "Minder suiker", "fr": "Moins de sucre", "en": "Less sugar"}, "g6": {"nl": "Minder koolhydraten", "fr": "Moins de glucides", "en": "Fewer carbohydrates"}, "g7": {"nl": "Darmgezondheid (vezels)", "fr": "Santé intestinale (fibres)", "en": "Gut health (fibre)"}, "g8": {"nl": "Minder ultrabewerkt", "fr": "Moins d'ultra-transformé", "en": "Less ultra-processed"}, "g9": {"nl": "Vegetarisch", "fr": "Végétarien", "en": "Vegetarian"}, "g10": {"nl": "Veganistisch", "fr": "Végan", "en": "Vegan"}, "s5.t": {"nl": "Peertje en spel", "fr": "Peertje et jeu", "en": "Peertje and play"}, "s5.s": {"nl": "Gezonde gewoontes, een spelletje voor het hele gezin.", "fr": "De bonnes habitudes, un petit jeu pour toute la famille.", "en": "Good habits, made a little game for the whole family."}, "s5.c0.t": {"nl": "Je eigen Peertje", "fr": "Votre propre Peertje", "en": "Your own Peertje"}, "s5.c0.p": {"nl": "Kleur, ogen, blaadje of krul, wangetjes en sproeten. Het vervangt je emoji overal.", "fr": "Couleur, yeux, feuille ou boucle, joues et taches de rousseur. Il remplace votre emoji partout.", "en": "Colour, eyes, leaf or curl, cheeks and freckles. It replaces your emoji everywhere."}, "s5.c1.t": {"nl": "Sterren en levels", "fr": "Étoiles et niveaux", "en": "Stars and levels"}, "s5.c1.p": {"nl": "Van een klein pitje tot een gekroonde peer. Sterren gaan nooit omlaag.", "fr": "D'un petit pépin à une poire couronnée. Les étoiles ne baissent jamais.", "en": "From a little pip to a crowned pear. Stars never go down."}, "s5.c2.t": {"nl": "Kleerkast van Peertje", "fr": "La garde-robe de Peertje", "en": "Peertje's wardrobe"}, "s5.c2.p": {"nl": "Elk level geeft iets om te dragen: een zonnebril, een feesthoedje, een gouden schil.", "fr": "Chaque niveau débloque quelque chose à porter : des lunettes de soleil, un chapeau de fête, une peau dorée.", "en": "Every level unlocks something to wear: sunglasses, a party hat, golden skin."}, "s5.c3.t": {"nl": "Stickers en uitdagingen", "fr": "Autocollants et défis", "en": "Stickers and challenges"}, "s5.c3.p": {"nl": "Verzamel stickers, houd reeksen vol en ga elke week een nieuwe gezinsuitdaging aan.", "fr": "Collectionnez des autocollants, gardez vos séries et relevez chaque semaine un nouveau défi familial.", "en": "Collect stickers, keep streaks going, and take on a new family challenge every week."}, "s5.c4.t": {"nl": "Kindweergave", "fr": "Vue enfant", "en": "Child view"}, "s5.c4.p": {"nl": "Stickers en vrolijke berichten in plaats van getallen. Allergieën blijven zichtbaar.", "fr": "Des autocollants et des messages joyeux au lieu de chiffres. Les allergies restent affichées.", "en": "Stickers and cheerful messages instead of numbers. Allergies are still shown."}, "s6.t": {"nl": "Samen, overal", "fr": "Ensemble, partout", "en": "Together, everywhere"}, "s6.s": {"nl": "Eén gezin, veel iPhones, een horloge en een beginscherm.", "fr": "Une famille, plusieurs iPhone, une montre et un écran d'accueil.", "en": "One family, many iPhones, a watch and a home screen."}, "s6.c0.t": {"nl": "Deel het gezin", "fr": "Partagez la famille", "en": "Share the family"}, "s6.c0.p": {"nl": "Profielen, dagboek en drankjes via je eigen iCloud. Iedereen noteert op de eigen iPhone.", "fr": "Profils, journal et boissons via votre propre iCloud. Chacun note sur son iPhone.", "en": "Profiles, diary and drinks through your own iCloud. Everyone logs on their own iPhone."}, "s6.c1.t": {"nl": "Apple Watch", "fr": "Apple Watch", "en": "Apple Watch"}, "s6.c1.p": {"nl": "Noteer een glas vanaf je pols en zie Peertje vollopen.", "fr": "Notez un verre depuis votre poignet et voyez Peertje se remplir.", "en": "Log a glass from your wrist and watch Peertje fill up."}, "s6.c2.t": {"nl": "Widgets", "fr": "Widgets", "en": "Widgets"}, "s6.c2.p": {"nl": "Water en Peertje op je beginscherm en vergrendelscherm, met een knop om meteen een glas toe te voegen.", "fr": "L'eau et Peertje sur votre écran d'accueil et verrouillé, avec un bouton pour ajouter un verre.", "en": "Water and Peertje on your home and lock screen, with a button to add a glass."}, "s6.c3.t": {"nl": "Siri-opdrachten", "fr": "Raccourcis Siri", "en": "Siri shortcuts"}, "s6.c3.p": {"nl": "Noteer water of bekijk je dag zonder de app te openen.", "fr": "Notez de l'eau ou consultez votre journée sans ouvrir l'appli.", "en": "Log water or check your day without opening the app."}, "s6.c4.t": {"nl": "Home Assistant", "fr": "Home Assistant", "en": "Home Assistant"}, "s6.c4.p": {"nl": "De boodschappenlijst op je eigen thuisserver, dezelfde voor het hele huishouden.", "fr": "La liste de courses sur votre propre serveur domestique, la même pour tout le foyer.", "en": "The shopping list on your own home server, the same for the whole household."}, "s6.c5.t": {"nl": "Drie talen", "fr": "Trois langues", "en": "Three languages"}, "s6.c5.p": {"nl": "Nederlands, français en English, ieder in de eigen taal.", "fr": "Nederlands, français et English, chacun dans sa langue.", "en": "Nederlands, français and English, each person in their own."}, "p0.t": {"nl": "Geen reclame, geen tracking", "fr": "Pas de pub, pas de pistage", "en": "No ads, no tracking"}, "p0.p": {"nl": "Geen accounts en geen analytics. De maker ontvangt niets van jou.", "fr": "Pas de comptes ni d'analytics. Le développeur ne reçoit rien de vous.", "en": "No accounts and no analytics. The developer receives nothing from you."}, "p1.t": {"nl": "Je eigen AI-sleutel", "fr": "Votre propre clé d'IA", "en": "Your own AI key"}, "p1.p": {"nl": "Er gaat niets naar Claude, ChatGPT, Gemini of Grok voordat je het toestaat. Mensen gaan als nummer, nooit met hun naam.", "fr": "Rien ne part vers Claude, ChatGPT, Gemini ou Grok sans votre accord. Les personnes sont envoyées par numéro, jamais par nom.", "en": "Nothing goes to Claude, ChatGPT, Gemini or Grok before you agree. People go as numbers, never by name."}, "p2.t": {"nl": "Gezondheidsgegevens blijven thuis", "fr": "Les données de santé restent chez vous", "en": "Health data stays home"}, "p2.p": {"nl": "Stappen, ritten, gewicht, calorieën en bloedsuiker blijven op je iPhone en in Apple Gezondheid.", "fr": "Pas, sorties, poids, calories et glycémie restent sur votre iPhone et dans Apple Santé.", "en": "Steps, rides, weight, calories and blood sugar stay on your iPhone and in Apple Health."}, "p3.t": {"nl": "Scores die je kunt nakijken", "fr": "Des scores vérifiables", "en": "Scores you can check"}, "p3.p": {"nl": "Elk punt wordt uitgelegd, en de regels komen uit openbaar advies dat je zelf kunt lezen.", "fr": "Chaque point est expliqué, et les règles viennent de recommandations publiques que vous pouvez lire.", "en": "Every point is explained, and the rules come from public advice you can read yourself."}};
+  const titles = { nl: "Peertje in een oogopslag", fr: "Peertje en un coup d'œil", en: "Peertje at a Glance" };
+  let lang = "nl";
+  try { const saved = localStorage.getItem("peertje-lang"); if (saved && T.lede[saved]) lang = saved; } catch (e) {}
+  const fromHash = location.hash.replace("#", "");
+  if (T.lede[fromHash]) lang = fromHash;
+
+  const input = document.getElementById('glassInput');
+  const level = document.getElementById('waterLevel');
+  const litres = document.getElementById('litres');
+  const mood = document.getElementById('mood');
+  const pear = document.getElementById('pear');
+  const mouth = document.getElementById('mouth');
+  const eyeL = document.getElementById('eyeL');
+  const eyeR = document.getElementById('eyeR');
+  const sweat = document.getElementById('sweat');
+  const row = document.getElementById('glassRow');
+  const glasses = [];
+  for (let i = 0; i < 8; i++) { const g = document.createElement('span'); g.className = 'glass'; row.appendChild(g); glasses.push(g); }
+
+  function applyLanguage(next) {
+    lang = next;
+    document.documentElement.lang = lang;
+    document.title = titles[lang];
+    document.querySelectorAll('[data-i]').forEach(el => {
+      const v = T[el.dataset.i] && T[el.dataset.i][lang];
+      if (v == null) return;
+      if (el.dataset.html) el.innerHTML = v; else el.textContent = v;
+    });
+    document.querySelectorAll('[data-ia]').forEach(el => el.setAttribute('aria-label', T[el.dataset.ia][lang]));
+    document.querySelectorAll('.lang button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.lang === lang)));
+    try { localStorage.setItem("peertje-lang", lang); } catch (e) {}
+    render();
+  }
+
+  // Water rises from the bottom of the pear (y≈232) to its top (y≈52).
+  const bottom = 232, top = 52;
+  function render() {
+    const n = Number(input.value);
+    const share = n / 8;
+    const y = bottom - (bottom - top) * share - 92;
+    level.style.transform = `translateY(${y}px)`;
+    const l = (n * 0.25).toFixed(1);
+    litres.textContent = (lang === 'en' ? l : l.replace('.', ',')) + ' L';
+    glasses.forEach((g, i) => g.classList.toggle('on', i < n));
+    pear.classList.toggle('full', n === 8);
+    sweat.style.opacity = share < 0.25 ? 1 : 0;
+    const left = 8 - n;
+    if (share < 0.25) {
+      eyeL.setAttribute('d', 'M78 140 h10'); eyeR.setAttribute('d', 'M112 140 h10');
+      mouth.setAttribute('d', 'M90 164 q10 -7 20 0');
+      mood.textContent = T['m.thirsty'][lang];
+    } else if (share < 0.75) {
+      eyeL.setAttribute('d', 'M83 136 v6'); eyeR.setAttribute('d', 'M117 136 v6');
+      mouth.setAttribute('d', 'M90 160 q10 8 20 0');
+      mood.textContent = T['m.start'][lang];
+    } else if (share < 1) {
+      eyeL.setAttribute('d', 'M78 141 q5 -7 10 0'); eyeR.setAttribute('d', 'M112 141 q5 -7 10 0');
+      mouth.setAttribute('d', 'M88 158 q12 12 24 0');
+      mood.textContent = left === 1 ? T['m.almost1'][lang] : T['m.almostN'][lang].replace('{n}', left);
+    } else {
+      eyeL.setAttribute('d', 'M78 141 q5 -8 10 0'); eyeR.setAttribute('d', 'M112 141 q5 -8 10 0');
+      mouth.setAttribute('d', 'M86 156 q14 18 28 0 z');
+      mood.textContent = T['m.full'][lang];
+    }
+  }
+  input.addEventListener('input', render);
+  document.querySelectorAll('.lang button').forEach(b => b.addEventListener('click', () => {
+    applyLanguage(b.dataset.lang);
+    try { history.replaceState(null, '', '#' + b.dataset.lang); } catch (e) {}
+  }));
+  window.addEventListener('hashchange', () => { const h = location.hash.replace('#', ''); if (T.lede[h]) applyLanguage(h); });
+  applyLanguage(lang);
+})();
+</script>
+
+</body>
+</html>
